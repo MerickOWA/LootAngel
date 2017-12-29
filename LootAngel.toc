@@ -1,0 +1,7 @@
+## Interface: 70300
+## Title: Loot Angel
+## Notes: Loot assistant for your loot distributing priest angels.
+## Author: Decormei
+## Version: 0.0.1
+
+Core.lua
