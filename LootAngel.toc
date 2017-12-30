@@ -4,4 +4,4 @@
 ## Author: Decormei
 ## Version: 0.0.1
 
-Core.lua
+Core.xml
