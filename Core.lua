@@ -4,8 +4,7 @@
 -------------------------------------------------------------
 
 local RANDOM_ROLL_PATTERN = RANDOM_ROLL_RESULT:gsub("[().%%+-*?[%]^$]", "%%%1"):gsub("%%%%s", "(.+)"):gsub("%%%%d", "(%%d+)")
-local rollHistory = {}
-local rollCounts = {}
+local currentSession = 1
 
 function LootAngel_OnCommand(cmd)
 	if cmd == "show" then
@@ -16,6 +15,14 @@ function LootAngel_OnCommand(cmd)
 		LootAngelFrame:ClearAllPoints()
 		LootAngelFrame:SetPoint("CENTER")
 		LootAngelFrame:SetSize(180, 216)
+	elseif cmd == "new" then
+		LootAngel_NewSession()
+	elseif cmd == "prev" then
+		LootAngel_PreviousSession()
+	elseif cmd == "next" then
+		LootAngel_NextSession()
+	elseif cmd == "last" then
+		LootAngel_LastSession()
 	else
 		print("Command: "..cmd)
 	end
@@ -25,8 +32,6 @@ function LootAngelFrame_OnLoad(self)
 	self:RegisterForDrag("LeftButton")
 	self:RegisterEvent("ADDON_LOADED")
 	self:RegisterEvent("CHAT_MSG_SYSTEM")
-	rollHistory = {}
-	rollCounts = {}
 end
 
 function LootAngelFrame_OnEvent(self, event, arg1)
@@ -48,6 +53,14 @@ end
 
 function LootAngel_OnLoad()
 	print("Loot Angel Loaded!")
+
+	if LootAngelDB == nil then
+		print("Creating new LootAngelDB?")
+		LootAngelDB = {}
+		LootAngel_Clear()
+	else
+		LootAngel_LastSession()
+	end
 end
 
 function LootAngel_CHAT_MSG_SYSTEM(msg)
@@ -58,33 +71,61 @@ end
 
 function LootAngel_OnRoll(name, roll, low, high)
 
-	local count = rollCounts[name] and rollCounts[name] + 1 or 1
+	local rollData = LootAngelDB.sessions[#LootAngelDB.sessions].data
 
-	table.insert(rollHistory, {
+	local count = 1
+	for i,item in pairs(rollData) do
+		if item.name == name then count=count+1 end
+	end
+
+	table.insert(rollData, {
 		name = name,
 		roll = tonumber(roll),
 		low = tonumber(low),
 		high = tonumber(high),
 		count = count
 	})
-	rollCounts[name] = count
 
+	table.sort(rollData, function(a, b) return a.roll > b.roll end)
+	
 	LootAngel_UpdateUI()
 end
 
 function LootAngel_Clear()
-	rollCounts = {}
-	rollHistory = {}
+	LootAngelDB.sessions = {{data={}}}
+	currentSession = 1
+	LootAngel_UpdateUI()
+end
 
+function LootAngel_NewSession()
+	table.insert(LootAngelDB.sessions, {data={}})
+	currentSession = #LootAngelDB.sessions
+	LootAngel_UpdateUI()
+end
+
+function LootAngel_NextSession()
+	currentSession = math.min(currentSession + 1, #LootAngelDB.sessions)
+	LootAngel_UpdateUI()
+end
+
+function LootAngel_PreviousSession()
+	currentSession = math.max(currentSession - 1, 1)
+	LootAngel_UpdateUI()
+end
+
+function LootAngel_LastSession()
+	currentSession = #LootAngelDB.sessions
+	print("Switching to session "..currentSession)
 	LootAngel_UpdateUI()
 end
 
 function LootAngel_UpdateUI()
-	table.sort(rollHistory, function(a, b) return a.roll > b.roll end)
+	
+	local rollData = LootAngelDB.sessions[currentSession].data
 
 	local rollText = ""
-	for i, roll in pairs(rollHistory) do
-		local tied = (rollHistory[i + 1] and roll.roll == rollHistory[i + 1].roll) or (rollHistory[i - 1] and roll.roll == rollHistory[i - 1].roll)
+	for i, roll in pairs(rollData) do
+		local tied = (rollData[i + 1] and roll.roll == rollData[i + 1].roll) or (rollData[i - 1] and roll.roll == rollData[i - 1].roll)
 		rollText = rollText .. string.format("|c%s%d|r: |c%s%s%s%s|r\n",
 				tied and "ffffff00" or "ffffffff",
 				roll.roll,
@@ -94,7 +135,7 @@ function LootAngel_UpdateUI()
 				roll.count > 1 and format(" [%d]", roll.count) or "")
 	end
 	LootAngelRollText:SetText(rollText)
-	LootAngelFrameStatusText:SetText(string.format("%d Roll(s)", #rollHistory))	
+	LootAngelFrameStatusText:SetText(string.format("Session %d: %d Roll(s)", currentSession, #rollData))	
 end
 
 -- Slash commands
