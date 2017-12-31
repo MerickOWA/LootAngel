@@ -12,6 +12,10 @@ function LootAngel_OnCommand(cmd)
 		LootAngelFrame:Show()
 	elseif cmd == "clear" then
 		LootAngel_Clear()
+	elseif cmd == "reset" then
+		LootAngelFrame:ClearAllPoints()
+		LootAngelFrame:SetPoint("CENTER")
+		LootAngelFrame:SetSize(180, 216)
 	else
 		print("Command: "..cmd)
 	end

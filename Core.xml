@@ -2,53 +2,30 @@
   <Script file="Core.lua"/>
 
   <Frame name="LootAngelFrame" parent="UIParent" hidden="false" enableMouse="true" movable="true" resizable="true">
-    <Size><AbsDimension x="180" y="216"/></Size>
+    <Size x="180" y="216"/>
 		<Anchors>
 			<Anchor point="CENTER"/>
-			<Offset><AbsDimension x="300" y="0"/></Offset>
 		</Anchors>
 		<Backdrop name="$parentBackdrop" bgFile="Interface\TutorialFrame\TutorialFrameBackground" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="16"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="64"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="5" right="5" top="5" bottom="5"/>
-			</BackgroundInsets>
+			<EdgeSize val="16"/>
+			<TileSize val="64"/>
+			<BackgroundInsets left="5" right="5" top="5" bottom="5"/>
 		</Backdrop>
 
 		<Layers>
 			<Layer level="BACKGROUND">
 				<FontString name="$parentTitle" inherits="GameFontNormal" text="Loot Angel" justifyH="LEFT" justifyV="TOP">
 					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="10" y="-10"/>
-							</Offset>
-						</Anchor>
-						<Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
-							<Offset>
-								<AbsDimension x="-10" y="-30"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="TOPLEFT" x="10" y="-10"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" x="-10" y="-30"/>
 					</Anchors>
 				</FontString>
 
 				<FontString name="$parentStatusText" inherits="GameFontNormalSmall" text="0 Rolls" justifyH="LEFT" justifyV="TOP">
 					<Color r="0.5" g="0.5" b="1.0"/>
 					<Anchors>
-						<Anchor point="BOTTOMLEFT">
-							<Offset>
-								<AbsDimension x="10" y="10"/>
-							</Offset>
-						</Anchor>
-						<Anchor point="BOTTOMRIGHT">
-							<Offset>
-								<AbsDimension x="0" y="20"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="BOTTOMLEFT" x="10" y="10"/>
+						<Anchor point="BOTTOMRIGHT" x="0" y="20"/>
 					</Anchors>
 				</FontString>		
 			</Layer>
@@ -69,11 +46,7 @@
 			<Button name="$parentResizeGrip">
 				<Size x="16" y="16"/>
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parent">
-            <Offset>
-              <AbsDimension x="-5" y="5"/>
-            </Offset>
-					</Anchor>
+					<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parent" x="-5" y="5"/>
 				</Anchors>
 				<NormalTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Up"/>
 				<HighlightTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Highlight"/>
@@ -90,40 +63,20 @@
 
 			<ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="6" y="-30"/>
-						</Offset>
-					</Anchor>
-					<Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeTo="$parentResizeGrip">
-						<Offset>
-							<AbsDimension x="-24" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" x="6" y="-30"/>
+					<Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeTo="$parentResizeGrip" x="-24" y="0"/>
 				</Anchors>
 				<ScrollChild>
 					<Frame name="$parentScrollChild">
-						<Size>
-							<AbsDimension x="30" y="30"/>
-						</Size>
+						<Size x="30" y="30"/>
 						<Frames>
 							<SimpleHTML name="LootAngelRollText">
 								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent">
-										<Offset>
-											<AbsDimension x="0" y="-2"/>
-										</Offset>
-									</Anchor>
-									<Anchor point="BOTTOMRIGHT" relativeTo="$parent">
-										<Offset>
-											<AbsDimension x="0" y="2"/>
-										</Offset>
-									</Anchor>
+									<Anchor point="TOPLEFT" relativeTo="$parent" x="0" y="-2"/>
+									<Anchor point="BOTTOMRIGHT" relativeTo="$parent" x="0" y="2"/>
 								</Anchors>
 								<FontString name="LootAngelFontString" inherits="ChatFontNormal" justifyH="LEFT" justifyV="TOP">
-									<Size>
-										<AbsDimension x="270" y="0"/>
-									</Size>
+									<Size x="270" y="0"/>
 									<Color r="1" g="1" b="1" a="1.0" />
 								</FontString>
 							</SimpleHTML>
