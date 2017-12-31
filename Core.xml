@@ -87,6 +87,50 @@
 					</OnMouseUp>
 				</Scripts>
 			</Button>
+
+			<ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="6" y="-30"/>
+						</Offset>
+					</Anchor>
+					<Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeTo="$parentResizeGrip">
+						<Offset>
+							<AbsDimension x="-24" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<ScrollChild>
+					<Frame name="$parentScrollChild">
+						<Size>
+							<AbsDimension x="30" y="30"/>
+						</Size>
+						<Frames>
+							<SimpleHTML name="LootAngelRollText">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent">
+										<Offset>
+											<AbsDimension x="0" y="-2"/>
+										</Offset>
+									</Anchor>
+									<Anchor point="BOTTOMRIGHT" relativeTo="$parent">
+										<Offset>
+											<AbsDimension x="0" y="2"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<FontString name="LootAngelFontString" inherits="ChatFontNormal" justifyH="LEFT" justifyV="TOP">
+									<Size>
+										<AbsDimension x="270" y="0"/>
+									</Size>
+									<Color r="1" g="1" b="1" a="1.0" />
+								</FontString>
+							</SimpleHTML>
+						</Frames>
+					</Frame>
+				</ScrollChild>
+			</ScrollFrame>
     </Frames>
 
     <Scripts>

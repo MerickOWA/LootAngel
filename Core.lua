@@ -8,10 +8,13 @@ local rollHistory = {}
 local rollCounts = {}
 
 function LootAngel_OnCommand(cmd)
-	if (cmd == "show") then
+	if cmd == "show" then
 		LootAngelFrame:Show()
+	elseif cmd == "clear" then
+		LootAngel_Clear()
+	else
+		print("Command: "..cmd)
 	end
-	print("Command: "..cmd)
 end
 
 function LootAngelFrame_OnLoad(self)
@@ -65,12 +68,29 @@ function LootAngel_OnRoll(name, roll, low, high)
 	LootAngel_UpdateUI()
 end
 
+function LootAngel_Clear()
+	rollCounts = {}
+	rollHistory = {}
+
+	LootAngel_UpdateUI()
+end
+
 function LootAngel_UpdateUI()
 	table.sort(rollHistory, function(a, b) return a.roll > b.roll end)
 
-	for i, data in pairs(rollHistory) do
-		print(data.name..": Rolled a "..data.roll.." using from "..data.low.." to "..data.high.." for the "..data.count.." time")
+	local rollText = ""
+	for i, roll in pairs(rollHistory) do
+		local tied = (rollHistory[i + 1] and roll.roll == rollHistory[i + 1].roll) or (rollHistory[i - 1] and roll.roll == rollHistory[i - 1].roll)
+		rollText = rollText .. string.format("|c%s%d|r: |c%s%s%s%s|r\n",
+				tied and "ffffff00" or "ffffffff",
+				roll.roll,
+				((roll.low ~= 1 or roll.high ~= 100) or (roll.count > 1)) and  "ffffcccc" or "ffffffff",
+				roll.name,
+				(roll.low ~= 1 or roll.high ~= 100) and format(" (%d-%d)", roll.low, roll.high) or "",
+				roll.count > 1 and format(" [%d]", roll.count) or "")
 	end
+	LootAngelRollText:SetText(rollText)
+	LootAngelFrameStatusText:SetText(string.format("%d Roll(s)", #rollHistory))	
 end
 
 -- Slash commands
