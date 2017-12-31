@@ -1,22 +1,21 @@
-SLASH_RELOADUI1 = "/rl"
-SlashCmdList.RELOADUI = ReloadUI
-
-SLASH_FRAMESTK1 = "/fs"
-SlashCmdList.FRAMESTK = function()
-	LoadAddOn('Blizzard_DebugTools')
-	FrameStackTooltip_Toggle()
-end
-
-for i = 1, NUM_CHAT_WINDOWS do
-	_G["ChatFrame"..i.."EditBox"]:SetAltArrowKeyMode(false)
-end
+--for i = 1, NUM_CHAT_WINDOWS do
+--	_G["ChatFrame"..i.."EditBox"]:SetAltArrowKeyMode(false)
+--end
 -------------------------------------------------------------
 
 local RANDOM_ROLL_PATTERN = RANDOM_ROLL_RESULT:gsub("[().%%+-*?[%]^$]", "%%%1"):gsub("%%%%s", "(.+)"):gsub("%%%%d", "(%%d+)")
 local rollHistory = {}
 local rollCounts = {}
 
+function LootAngel_OnCommand(cmd)
+	if (cmd == "show") then
+		LootAngelFrame:Show()
+	end
+	print("Command: "..cmd)
+end
+
 function LootAngelFrame_OnLoad(self)
+	self:RegisterForDrag("LeftButton")
 	self:RegisterEvent("ADDON_LOADED")
 	self:RegisterEvent("CHAT_MSG_SYSTEM")
 	rollHistory = {}
@@ -30,6 +29,14 @@ function LootAngelFrame_OnEvent(self, event, arg1)
 	elseif (event == "CHAT_MSG_SYSTEM") then
 		LootAngel_CHAT_MSG_SYSTEM(arg1)
 	end
+end
+
+function LootAngelFrame_OnDragStart(self)
+	self:StartMoving()
+end
+
+function LootAngelFrame_OnDragStop(self)
+	self:StopMovingOrSizing()
 end
 
 function LootAngel_OnLoad()
@@ -65,3 +72,18 @@ function LootAngel_UpdateUI()
 		print(data.name..": Rolled a "..data.roll.." using from "..data.low.." to "..data.high.." for the "..data.count.." time")
 	end
 end
+
+-- Slash commands
+
+SLASH_RELOADUI1 = "/rl"
+SlashCmdList.RELOADUI = ReloadUI
+
+SLASH_FRAMESTK1 = "/fs"
+SlashCmdList.FRAMESTK = function()
+	LoadAddOn('Blizzard_DebugTools')
+	FrameStackTooltip_Toggle()
+end
+
+SLASH_LOOTANGEL1 = "/la"
+SLASH_LOOTANGEL2 = "/lootangel"
+SlashCmdList.LOOTANGEL = LootAngel_OnCommand
