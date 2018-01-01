@@ -107,6 +107,7 @@ function LootAngel_OnRoll(name, roll, low, high)
 	-- switch to the current session that the roll was just added to
 	-- TODO: Make this an option?
 	currentSession = #LootAngelDB.sessions
+	LootAngelFrame:Show()
 	
 	LootAngel_UpdateUI()
 end
