@@ -71,14 +71,14 @@ end
 
 function LootAngel_OnRoll(name, roll, low, high)
 
-	local rollData = LootAngelDB.sessions[#LootAngelDB.sessions].data
+	local data = LootAngelDB.sessions[#LootAngelDB.sessions].data
 
 	local count = 1
-	for i,item in pairs(rollData) do
+	for i,item in pairs(data) do
 		if item.name == name then count=count+1 end
 	end
 
-	table.insert(rollData, {
+	table.insert(data, {
 		name = name,
 		roll = tonumber(roll),
 		low = tonumber(low),
@@ -86,7 +86,11 @@ function LootAngel_OnRoll(name, roll, low, high)
 		count = count
 	})
 
-	table.sort(rollData, function(a, b) return a.roll > b.roll end)
+	table.sort(data, function(a, b) return a.roll > b.roll end)
+
+	-- switch to the current session that the roll was just added to
+	-- TODO: Make this an option?
+	currentSession = #LootAngelDB.sessions
 	
 	LootAngel_UpdateUI()
 end
@@ -121,11 +125,11 @@ end
 
 function LootAngel_UpdateUI()
 	
-	local rollData = LootAngelDB.sessions[currentSession].data
+	local data = LootAngelDB.sessions[currentSession].data
 
 	local rollText = ""
-	for i, roll in pairs(rollData) do
-		local tied = (rollData[i + 1] and roll.roll == rollData[i + 1].roll) or (rollData[i - 1] and roll.roll == rollData[i - 1].roll)
+	for i, roll in pairs(data) do
+		local tied = (data[i + 1] and roll.roll == data[i + 1].roll) or (data[i - 1] and roll.roll == data[i - 1].roll)
 		rollText = rollText .. string.format("|c%s%d|r: |c%s%s%s%s|r\n",
 				tied and "ffffff00" or "ffffffff",
 				roll.roll,
@@ -135,7 +139,7 @@ function LootAngel_UpdateUI()
 				roll.count > 1 and format(" [%d]", roll.count) or "")
 	end
 	LootAngelRollText:SetText(rollText)
-	LootAngelFrameStatusText:SetText(string.format("Session %d: %d Roll(s)", currentSession, #rollData))	
+	LootAngelFrameStatusText:SetText(string.format("Session %d: %d Roll(s)", currentSession, #data))	
 end
 
 -- Slash commands
