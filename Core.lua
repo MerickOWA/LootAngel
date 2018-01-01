@@ -58,9 +58,13 @@ function LootAngel_OnLoad()
 		print("Creating new LootAngelDB?")
 		LootAngelDB = {}
 		LootAngel_Clear()
-	else
-		LootAngel_LastSession()
 	end
+
+	LootAngelDB.options = LootAngelDB.options or {
+		sessionIdleTimeout = 30
+	}
+
+	LootAngel_LastSession()
 end
 
 function LootAngel_CHAT_MSG_SYSTEM(msg)
@@ -71,7 +75,17 @@ end
 
 function LootAngel_OnRoll(name, roll, low, high)
 
-	local data = LootAngelDB.sessions[#LootAngelDB.sessions].data
+	local now = GetTime()
+	local session = LootAngelDB.sessions[#LootAngelDB.sessions]
+	local timeSinceLastRoll = session.lastroll and now - session.lastroll
+
+	-- If the last roll in the session was too long ago, then start a new session
+	if timeSinceLastRoll and LootAngelDB.options.sessionIdleTimeout and (timeSinceLastRoll < 0 or timeSinceLastRoll > LootAngelDB.options.sessionIdleTimeout) then
+		table.insert(LootAngelDB.sessions, {data={}})
+		session = LootAngelDB.sessions[#LootAngelDB.sessions]
+	end
+
+	local data = session.data
 
 	local count = 1
 	for i,item in pairs(data) do
@@ -87,6 +101,8 @@ function LootAngel_OnRoll(name, roll, low, high)
 	})
 
 	table.sort(data, function(a, b) return a.roll > b.roll end)
+
+	session.lastroll = now
 
 	-- switch to the current session that the roll was just added to
 	-- TODO: Make this an option?
