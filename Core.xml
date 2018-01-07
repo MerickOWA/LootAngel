@@ -79,6 +79,10 @@
 									<Size x="270" y="0"/>
 									<Color r="1" g="1" b="1" a="1.0" />
 								</FontString>
+								<Scripts>
+									<OnHyperlinkEnter function="LootAngelFrame_OnHyperlinkEnter"/>
+									<OnHyperlinkLeave function="LootAngelFrame_OnHyperlinkLeave"/>
+								</Scripts>
 							</SimpleHTML>
 						</Frames>
 					</Frame>

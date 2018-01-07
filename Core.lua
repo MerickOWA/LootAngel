@@ -4,9 +4,12 @@
 -------------------------------------------------------------
 
 local RANDOM_ROLL_PATTERN = RANDOM_ROLL_RESULT:gsub("[().%%+-*?[%]^$]", "%%%1"):gsub("%%%%s", "(.+)"):gsub("%%%%d", "(%%d+)")
+local ITEM_LINK_PATTERN = "|c[%x]*|Hitem[:%d]*|h.-|h|r"
 local currentSession = 1
 
-function LootAngel_OnCommand(cmd)
+function LootAngel_OnCommand(text)
+	local cmd, args = text:match(" *([^ ]*) *(.*)")
+
 	if cmd == "show" then
 		LootAngelFrame:Show()
 	elseif cmd == "clear" then
@@ -16,7 +19,7 @@ function LootAngel_OnCommand(cmd)
 		LootAngelFrame:SetPoint("CENTER")
 		LootAngelFrame:SetSize(180, 216)
 	elseif cmd == "new" then
-		LootAngel_NewSession()
+		LootAngel_NewSession(args:match(ITEM_LINK_PATTERN))
 	elseif cmd == "prev" then
 		LootAngel_PreviousSession()
 	elseif cmd == "next" then
@@ -24,7 +27,7 @@ function LootAngel_OnCommand(cmd)
 	elseif cmd == "last" then
 		LootAngel_LastSession()
 	else
-		print("Command: "..cmd)
+		print("Command: "..cmd.." ["..args.."]")
 	end
 end
 
@@ -32,6 +35,7 @@ function LootAngelFrame_OnLoad(self)
 	self:RegisterForDrag("LeftButton")
 	self:RegisterEvent("ADDON_LOADED")
 	self:RegisterEvent("CHAT_MSG_SYSTEM")
+	LootAngelRollText:SetHyperlinksEnabled(true)
 end
 
 function LootAngelFrame_OnEvent(self, event, arg1)
@@ -49,6 +53,20 @@ end
 
 function LootAngelFrame_OnDragStop(self)
 	self:StopMovingOrSizing()
+end
+
+function LootAngelFrame_OnHyperlinkEnter(self, link, text)
+	--print("Loot Angel OnHyperlinkEnter: ".. (link:gsub("|", "||")).. "  ---  "..(text:gsub("|", "||")))
+	--SetItemRef(link, text, self, "LeftButton")
+	ShowUIPanel(GameTooltip)
+	GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
+	GameTooltip:SetHyperlink(link)
+	GameTooltip:Show()
+end
+
+function LootAngelFrame_OnHyperlinkLeave(self, linkData, link)
+	--print("Loot Angel OnHyperlinkLeave")
+	HideUIPanel(GameTooltip)
 end
 
 function LootAngel_OnLoad()
@@ -118,9 +136,16 @@ function LootAngel_Clear()
 	LootAngel_UpdateUI()
 end
 
-function LootAngel_NewSession()
-	table.insert(LootAngelDB.sessions, {data={}})
-	currentSession = #LootAngelDB.sessions
+function LootAngel_NewSession(item)
+	local session = LootAngelDB.sessions[#LootAngelDB.sessions];
+
+	if session.lastRoll ~= nil then
+		table.insert(LootAngelDB.sessions, {item=item, data={}})
+		currentSession = #LootAngelDB.sessions
+	else
+		session.item = item;
+	end
+
 	LootAngel_UpdateUI()
 end
 
@@ -136,15 +161,15 @@ end
 
 function LootAngel_LastSession()
 	currentSession = #LootAngelDB.sessions
-	print("Switching to session "..currentSession)
 	LootAngel_UpdateUI()
 end
 
 function LootAngel_UpdateUI()
 	
-	local data = LootAngelDB.sessions[currentSession].data
+	local session = LootAngelDB.sessions[currentSession]
+	local data = session.data
 
-	local rollText = ""
+	local rollText = session.item and session.item.."\n" or ""
 	for i, roll in pairs(data) do
 		local tied = (data[i + 1] and roll.roll == data[i + 1].roll) or (data[i - 1] and roll.roll == data[i - 1].roll)
 		rollText = rollText .. string.format("|c%s%d|r: |c%s%s%s%s|r\n",
