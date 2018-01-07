@@ -35,6 +35,7 @@ function LootAngelFrame_OnLoad(self)
 	self:RegisterForDrag("LeftButton")
 	self:RegisterEvent("ADDON_LOADED")
 	self:RegisterEvent("CHAT_MSG_SYSTEM")
+	self:RegisterEvent("CHAT_MSG_RAID_WARNING")
 	LootAngelRollText:SetHyperlinksEnabled(true)
 end
 
@@ -44,6 +45,8 @@ function LootAngelFrame_OnEvent(self, event, arg1)
 		LootAngel_OnLoad()
 	elseif (event == "CHAT_MSG_SYSTEM") then
 		LootAngel_CHAT_MSG_SYSTEM(arg1)
+	elseif (event == "CHAT_MSG_RAID_WARNING") then
+		LootAngel_CHAT_MSG_RAID_WARNING(arg1)
 	end
 end
 
@@ -88,6 +91,13 @@ end
 function LootAngel_CHAT_MSG_SYSTEM(msg)
 	for name, roll, low, high in msg:gmatch(RANDOM_ROLL_PATTERN) do
 		LootAngel_OnRoll(name, roll, low, high)
+	end
+end
+
+function LootAngel_CHAT_MSG_RAID_WARNING(msg)
+	local item = msg:match(ITEM_LINK_PATTERN)
+	if (item ~= nil) then
+		LootAngel_NewSession(item)
 	end
 end
 
@@ -139,13 +149,14 @@ end
 function LootAngel_NewSession(item)
 	local session = LootAngelDB.sessions[#LootAngelDB.sessions];
 
-	if session.lastRoll ~= nil then
+	if session.lastroll ~= nil then
 		table.insert(LootAngelDB.sessions, {item=item, data={}})
 		currentSession = #LootAngelDB.sessions
 	else
 		session.item = item;
 	end
 
+	LootAngelFrame:Show()	
 	LootAngel_UpdateUI()
 end
 
