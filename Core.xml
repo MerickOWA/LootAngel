@@ -43,6 +43,38 @@
 				</Scripts>
 			</Button>
 
+			<Button name="$parentNextButton">
+				<Size x="24" y="24"/>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeTo="$parentCloseButton" relativePoint="TOPLEFT" x="0" y="-4"/>
+				</Anchors>
+				<NormalTexture urgency="5" file="Interface\Buttons\UI-SpellbookIcon-NextPage-Up"/>
+				<PushedTexture urgency="5" file="Interface\Buttons\UI-SpellbookIcon-NextPage-Down"/>
+				<DisabledTexture urgency="5" file="Interface\Buttons\UI-SpellbookIcon-NextPage-Disabled"/>
+				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+				<Scripts>
+					<OnClick>
+						LootAngel_NextSession()
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<Button name="$parentPrevButton">
+				<Size x="24" y="24"/>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeTo="$parentNextButton" relativePoint="TOPLEFT" x="4" y="0"/>
+				</Anchors>
+				<NormalTexture urgency="5" file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Up"/>
+				<PushedTexture urgency="5" file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Down"/>
+				<DisabledTexture urgency="5" file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Disabled"/>
+				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+				<Scripts>
+					<OnClick>
+						LootAngel_PreviousSession()
+					</OnClick>
+				</Scripts>
+			</Button>
+
 			<Button name="$parentResizeGrip">
 				<Size x="16" y="16"/>
 				<Anchors>
