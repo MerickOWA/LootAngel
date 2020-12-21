@@ -1,16 +1,20 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-  <Script file="Core.lua"/>
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+	<Script file="Core.lua"/>
 
-  <Frame name="LootAngelFrame" parent="UIParent" hidden="false" enableMouse="true" movable="true" resizable="true">
-    <Size x="180" y="216"/>
+	<Frame name="LootAngelFrame" parent="UIParent" inherits="BackdropTemplate" hidden="false" enableMouse="true" movable="true" resizable="true">
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="BACKDROP_TOOLTIP_8_12_1111" type="global"/>
+			<KeyValue key="backdropColor" value="BLACK_FONT_COLOR" type="global"/>
+			<KeyValue key="backdropColorAlpha" value="0.9" type="number"/>
+			<KeyValue key="backdropBorderColor" value="TOOLTIP_DEFAULT_COLOR" type="global"/>
+		</KeyValues>
+
+		<Size x="180" y="216"/>
+
 		<Anchors>
 			<Anchor point="CENTER"/>
 		</Anchors>
-		<Backdrop name="$parentBackdrop" bgFile="Interface\TutorialFrame\TutorialFrameBackground" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-			<EdgeSize val="16"/>
-			<TileSize val="64"/>
-			<BackgroundInsets left="5" right="5" top="5" bottom="5"/>
-		</Backdrop>
 
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -27,7 +31,7 @@
 						<Anchor point="BOTTOMLEFT" x="10" y="10"/>
 						<Anchor point="BOTTOMRIGHT" x="0" y="20"/>
 					</Anchors>
-				</FontString>		
+				</FontString>
 			</Layer>
 		</Layers>
 
@@ -120,13 +124,13 @@
 					</Frame>
 				</ScrollChild>
 			</ScrollFrame>
-    </Frames>
+		</Frames>
 
-    <Scripts>
-			<OnLoad function="LootAngelFrame_OnLoad"/>
+		<Scripts>
+			<OnLoad function="LootAngelFrame_OnLoad" inherit="prepend"/>
 			<OnEvent function="LootAngelFrame_OnEvent"/>
-      <OnDragStart function="LootAngelFrame_OnDragStart"/>
-      <OnDragStop function="LootAngelFrame_OnDragStop"/>
-    </Scripts>
-  </Frame>
+			<OnDragStart function="LootAngelFrame_OnDragStart"/>
+			<OnDragStop function="LootAngelFrame_OnDragStop"/>
+		</Scripts>
+	</Frame>
 </Ui>

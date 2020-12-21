@@ -1,4 +1,4 @@
-## Interface: 70300
+## Interface: 90002
 ## Title: Loot Angel
 ## Notes: Loot assistant for your loot distributing priest angels.
 ## Author: Decormei
