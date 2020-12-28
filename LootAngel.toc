@@ -2,7 +2,7 @@
 ## Title: Loot Angel
 ## Notes: Loot assistant for your loot distributing priest angels.
 ## Author: Decormei
-## Version: 0.0.1
+## Version: 1.0.1
 ## SavedVariables: LootAngelDB
 
 Core.xml
