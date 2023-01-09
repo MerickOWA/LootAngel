@@ -26,8 +26,10 @@ function LootAngel_OnCommand(text)
 		LootAngel_NextSession()
 	elseif cmd == "last" then
 		LootAngel_LastSession()
+	elseif cmd == "help" then
+		LootAngel_Help()
 	else
-		print("Command: "..cmd.." ["..args.."]")
+		LootAngel_Default()
 	end
 end
 
@@ -193,6 +195,25 @@ function LootAngel_UpdateUI()
 	end
 	LootAngelRollText:SetText(rollText)
 	LootAngelFrameStatusText:SetText(string.format("Session %d: %d Roll(s)", currentSession, #data))	
+end
+
+function LootAngel_Help()
+	print("LootAngel Addon Help")
+	print("/la show  - unhide/show the addon window")
+	print("/la clear - delete/clear all roll sessions")
+	print("/la reset - resets the addon window position and size")
+	print("/la new   - force a new roll session to begin")
+	print("/la prev  - change the window view to the next older/previous roll session")
+	print("/la next  - change the window view to the next newer/next roll session")
+	print("/la last  - change the window view to the last/newest roll session")
+end
+
+function LootAngel_Default()
+	if LootAngelFrame:IsShown() then
+		LootAngel_Help()
+	else
+		LootAngelFrame:Show()
+	end
 end
 
 -- Slash commands
